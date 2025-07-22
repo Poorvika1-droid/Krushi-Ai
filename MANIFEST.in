@@ -1,0 +1,8 @@
+include README.md
+include LICENSE
+include requirements.txt
+include .env.example
+recursive-include templates *
+recursive-include static *
+recursive-include instance *
+include *.sqlite

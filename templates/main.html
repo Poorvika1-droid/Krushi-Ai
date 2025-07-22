@@ -1,0 +1,1197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KrishiAI - Voice Assistant for Farmers</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #0f4c75 0%, #3282b8 25%, #bbe1fa 50%, #1b262c 75%, #0f3460 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Animated background particles */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(120, 255, 120, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 255, 120, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(120, 120, 255, 0.1) 0%, transparent 50%);
+            animation: particleFloat 20s ease-in-out infinite;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes particleFloat {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            33% { transform: translateY(-20px) rotate(120deg); }
+            66% { transform: translateY(20px) rotate(240deg); }
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 30px;
+            box-shadow: 
+                0 25px 50px rgba(0,0,0,0.2),
+                0 0 0 1px rgba(255,255,255,0.1),
+                inset 0 1px 0 rgba(255,255,255,0.2);
+            padding: 50px;
+            max-width: 900px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            animation: containerGlow 3s ease-in-out infinite alternate;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, rgba(76, 175, 80, 0.1), transparent, rgba(33, 150, 243, 0.1), transparent);
+            animation: rotate 10s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes containerGlow {
+            0% { box-shadow: 0 25px 50px rgba(0,0,0,0.2), 0 0 30px rgba(76, 175, 80, 0.3); }
+            100% { box-shadow: 0 25px 50px rgba(0,0,0,0.2), 0 0 50px rgba(33, 150, 243, 0.4); }
+        }
+
+        @keyframes rotate {
+            100% { transform: rotate(360deg); }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .logo {
+            font-size: 4em;
+            margin-bottom: 20px;
+            position: relative;
+            display: inline-block;
+            animation: logoFloat 3s ease-in-out infinite;
+        }
+
+        .logo::before {
+            content: '🌾';
+            position: absolute;
+            top: 0;
+            left: 0;
+            animation: logoGlow 2s ease-in-out infinite alternate;
+            filter: drop-shadow(0 0 20px rgba(76, 175, 80, 0.8));
+        }
+
+        .logo::after {
+            content: '🌾';
+            position: absolute;
+            top: 0;
+            left: 0;
+            animation: logoGlow 2s ease-in-out infinite alternate-reverse;
+            filter: drop-shadow(0 0 30px rgba(33, 150, 243, 0.6));
+        }
+
+        @keyframes logoFloat {
+            0%, 100% { transform: translateY(0px) scale(1); }
+            50% { transform: translateY(-10px) scale(1.05); }
+        }
+
+        @keyframes logoGlow {
+            0% { opacity: 0.7; transform: scale(1); }
+            100% { opacity: 1; transform: scale(1.1); }
+        }
+
+        h1 {
+            color: #333;
+            font-size: 3.5em;
+            font-weight: 800;
+            margin-bottom: 15px;
+            background: linear-gradient(45deg, #4CAF50, #2196F3, #FF9800, #E91E63);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: textShimmer 3s ease-in-out infinite;
+            text-shadow: 0 0 30px rgba(76, 175, 80, 0.3);
+            position: relative;
+        }
+
+        h1::after {
+            content: 'KrishiAI';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.4), transparent);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: textSweep 2s ease-in-out infinite;
+        }
+
+        @keyframes textShimmer {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        @keyframes textSweep {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .subtitle {
+            color: #555;
+            font-size: 1.4em;
+            font-weight: 500;
+            margin-bottom: 40px;
+            background: linear-gradient(45deg, #666, #333);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: subtitlePulse 4s ease-in-out infinite;
+            position: relative;
+        }
+
+        .subtitle::before {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(45deg, #4CAF50, #2196F3);
+            border-radius: 2px;
+            animation: underlineGrow 3s ease-in-out infinite;
+        }
+
+        @keyframes subtitlePulse {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+        }
+
+        @keyframes underlineGrow {
+            0%, 100% { width: 50px; }
+            50% { width: 150px; }
+        }
+
+        .weather-widget {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 12px 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .weather-widget:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .weather-loading, .weather-content {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .weather-loading i {
+            font-size: 24px;
+            color: #4CAF50;
+            animation: pulse 1.5s infinite;
+        }
+
+        .weather-main {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .weather-icon {
+            font-size: 28px;
+            color: #FFC107;
+        }
+
+        .weather-temp {
+            font-size: 22px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .weather-details {
+            text-align: left;
+        }
+
+        .weather-location {
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .weather-desc {
+            font-size: 12px;
+            color: #666;
+            text-transform: capitalize;
+        }
+
+        .weather-recommendation {
+            font-size: 11px;
+            color: #4CAF50;
+            margin-top: 4px;
+            font-style: italic;
+            max-width: 200px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.6; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.1); }
+            100% { opacity: 0.6; transform: scale(1); }
+        }
+
+        .language-selector {
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .language-selector select {
+            padding: 15px 25px;
+            border: 3px solid transparent;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: 500;
+            background: linear-gradient(white, white) padding-box,
+                       linear-gradient(45deg, #4CAF50, #2196F3) border-box;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .language-selector select::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: left 0.5s;
+        }
+
+        .language-selector select:hover::before {
+            left: 100%;
+        }
+
+        .language-selector select:focus {
+            outline: none;
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(76, 175, 80, 0.3);
+        }
+
+        .language-selector select:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(33, 150, 243, 0.2);
+        }
+
+        .voice-interface {
+            margin: 50px 0;
+            position: relative;
+        }
+
+        .voice-button {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: none;
+            background: linear-gradient(45deg, #4CAF50, #45a049, #2196F3);
+            background-size: 200% 200%;
+            color: white;
+            font-size: 3em;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            box-shadow: 
+                0 15px 35px rgba(76, 175, 80, 0.4),
+                0 0 0 0 rgba(76, 175, 80, 0.7);
+            margin: 30px;
+            position: relative;
+            overflow: hidden;
+            animation: buttonBreathe 3s ease-in-out infinite;
+        }
+
+        .voice-button::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: buttonRotate 2s linear infinite;
+        }
+
+        .voice-button::after {
+            content: '';
+            position: absolute;
+            inset: 3px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #4CAF50, #45a049, #2196F3);
+            background-size: 200% 200%;
+            animation: backgroundShift 3s ease infinite;
+        }
+
+        .voice-button i {
+            position: relative;
+            z-index: 2;
+            animation: iconFloat 2s ease-in-out infinite;
+        }
+
+        .voice-button:hover {
+            transform: translateY(-8px) scale(1.05);
+            box-shadow: 
+                0 25px 50px rgba(76, 175, 80, 0.5),
+                0 0 0 20px rgba(76, 175, 80, 0.1);
+            animation: buttonHover 0.6s ease;
+        }
+
+        .voice-button.recording {
+            background: linear-gradient(45deg, #f44336, #d32f2f, #FF9800);
+            animation: recordingPulse 1s infinite, buttonSpin 2s linear infinite;
+            box-shadow: 
+                0 15px 35px rgba(244, 67, 54, 0.5),
+                0 0 0 0 rgba(244, 67, 54, 0.7);
+        }
+
+        .voice-button.recording::after {
+            background: linear-gradient(45deg, #f44336, #d32f2f, #FF9800);
+        }
+
+        /* Ripple effect */
+        .voice-button:active::before {
+            animation: ripple 0.6s ease-out;
+        }
+
+        @keyframes buttonBreathe {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        @keyframes buttonRotate {
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes backgroundShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        @keyframes iconFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-3px); }
+        }
+
+        @keyframes buttonHover {
+            0% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-4px) scale(1.02); }
+            100% { transform: translateY(-8px) scale(1.05); }
+        }
+
+        @keyframes recordingPulse {
+            0% { transform: scale(1); box-shadow: 0 15px 35px rgba(244, 67, 54, 0.5), 0 0 0 0 rgba(244, 67, 54, 0.7); }
+            50% { transform: scale(1.1); box-shadow: 0 20px 45px rgba(244, 67, 54, 0.6), 0 0 0 15px rgba(244, 67, 54, 0.3); }
+            100% { transform: scale(1); box-shadow: 0 15px 35px rgba(244, 67, 54, 0.5), 0 0 0 0 rgba(244, 67, 54, 0.7); }
+        }
+
+        @keyframes buttonSpin {
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes ripple {
+            0% { transform: scale(0); opacity: 1; }
+            100% { transform: scale(4); opacity: 0; }
+        }
+
+        .text-input-section {
+            margin: 40px 0;
+            position: relative;
+        }
+
+        .text-input {
+            width: 100%;
+            padding: 20px 25px;
+            border: 3px solid transparent;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 20px;
+            background: linear-gradient(white, white) padding-box,
+                       linear-gradient(45deg, #4CAF50, #2196F3, #FF9800) border-box;
+            transition: all 0.4s ease;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .text-input::placeholder {
+            color: #888;
+            font-weight: 400;
+        }
+
+        .text-input:focus {
+            outline: none;
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(76, 175, 80, 0.3);
+            background: linear-gradient(#f8f9fa, white) padding-box,
+                       linear-gradient(45deg, #4CAF50, #2196F3, #FF9800) border-box;
+        }
+
+        .text-input:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 12px 30px rgba(33, 150, 243, 0.2);
+        }
+
+        .send-button {
+            background: linear-gradient(45deg, #4CAF50, #45a049, #2196F3);
+            background-size: 200% 200%;
+            color: white;
+            border: none;
+            padding: 18px 40px;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            box-shadow: 0 10px 25px rgba(76, 175, 80, 0.3);
+            position: relative;
+            overflow: hidden;
+            animation: buttonGradientShift 3s ease infinite;
+        }
+
+        .send-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: left 0.5s;
+        }
+
+        .send-button:hover::before {
+            left: 100%;
+        }
+
+        .send-button:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(76, 175, 80, 0.4);
+        }
+
+        .send-button:active {
+            transform: translateY(-2px) scale(1.02);
+        }
+
+        @keyframes buttonGradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .response-section {
+            margin-top: 40px;
+            padding: 30px;
+            background: linear-gradient(135deg, rgba(248, 249, 250, 0.9), rgba(255, 255, 255, 0.95));
+            backdrop-filter: blur(10px);
+            border-radius: 25px;
+            border: 2px solid transparent;
+            background-clip: padding-box;
+            box-shadow: 
+                0 15px 35px rgba(0,0,0,0.1),
+                inset 0 1px 0 rgba(255,255,255,0.2);
+            display: none;
+            position: relative;
+            overflow: hidden;
+            animation: responseSlideIn 0.6s ease-out;
+        }
+
+        .response-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(45deg, #4CAF50, #2196F3, #FF9800, #E91E63);
+            background-size: 300% 300%;
+            animation: responseTopBorder 3s ease infinite;
+        }
+
+        .response-text {
+            font-size: 20px;
+            line-height: 1.8;
+            color: #333;
+            margin-bottom: 20px;
+            font-weight: 500;
+            position: relative;
+            animation: textFadeIn 0.8s ease-out 0.2s both;
+        }
+
+        .audio-player {
+            margin-top: 20px;
+            animation: audioFadeIn 0.8s ease-out 0.4s both;
+        }
+
+        .audio-player audio {
+            border-radius: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        @keyframes responseSlideIn {
+            0% { transform: translateY(30px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes responseTopBorder {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        @keyframes textFadeIn {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes audioFadeIn {
+            0% { opacity: 0; transform: scale(0.9); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        .loading {
+            display: none;
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 20px;
+            position: relative;
+        }
+
+        .spinner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 4px solid transparent;
+            border-top: 4px solid #4CAF50;
+            border-right: 4px solid #2196F3;
+            border-radius: 50%;
+            animation: spinMultiColor 1.2s linear infinite;
+        }
+
+        .spinner::after {
+            content: '';
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            width: calc(100% - 16px);
+            height: calc(100% - 16px);
+            border: 3px solid transparent;
+            border-bottom: 3px solid #FF9800;
+            border-left: 3px solid #E91E63;
+            border-radius: 50%;
+            animation: spinMultiColor 1s linear infinite reverse;
+        }
+
+        .loading p {
+            font-size: 18px;
+            font-weight: 500;
+            color: #555;
+            animation: loadingTextPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes spinMultiColor {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes loadingTextPulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        .features {
+            margin-top: 50px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+        }
+
+        .feature {
+            padding: 30px 25px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(248, 249, 250, 0.95));
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            text-align: center;
+            border: 2px solid transparent;
+            background-clip: padding-box;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            animation: featureSlideUp 0.6s ease-out;
+        }
+
+        .feature::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(45deg, #4CAF50, #2196F3, #FF9800, #E91E63);
+            background-size: 300% 300%;
+            animation: featureTopBorder 4s ease infinite;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .feature:hover::before {
+            opacity: 1;
+        }
+
+        .feature:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .feature:nth-child(1) { animation-delay: 0.1s; }
+        .feature:nth-child(2) { animation-delay: 0.2s; }
+        .feature:nth-child(3) { animation-delay: 0.3s; }
+        .feature:nth-child(4) { animation-delay: 0.4s; }
+
+        .feature i {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+            background: linear-gradient(45deg, #4CAF50, #2196F3);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: iconFloat 3s ease-in-out infinite;
+            display: block;
+        }
+
+        .feature:nth-child(1) i { animation-delay: 0s; }
+        .feature:nth-child(2) i { animation-delay: 0.5s; }
+        .feature:nth-child(3) i { animation-delay: 1s; }
+        .feature:nth-child(4) i { animation-delay: 1.5s; }
+
+        .feature h3 {
+            color: #333;
+            margin-bottom: 12px;
+            font-size: 1.3em;
+            font-weight: 600;
+        }
+
+        .feature p {
+            color: #666;
+            font-size: 15px;
+            line-height: 1.5;
+            font-weight: 400;
+        }
+
+        @keyframes featureSlideUp {
+            0% { transform: translateY(30px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes featureTopBorder {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        @keyframes iconFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .status {
+            margin: 20px 0;
+            padding: 15px 20px;
+            border-radius: 25px;
+            display: none;
+            font-weight: 500;
+            font-size: 16px;
+            position: relative;
+            overflow: hidden;
+            animation: statusSlideIn 0.4s ease-out;
+        }
+
+        .status::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: statusShine 2s ease-in-out infinite;
+        }
+
+        .status.success {
+            background: linear-gradient(135deg, #d4edda, #c3e6cb);
+            color: #155724;
+            border: 2px solid #4CAF50;
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.2);
+        }
+
+        .status.error {
+            background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+            color: #721c24;
+            border: 2px solid #f44336;
+            box-shadow: 0 5px 15px rgba(244, 67, 54, 0.2);
+        }
+
+        @keyframes statusSlideIn {
+            0% { transform: translateX(-20px); opacity: 0; }
+            100% { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes statusShine {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        /* Floating particles effect */
+        .floating-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(76, 175, 80, 0.6);
+            border-radius: 50%;
+            animation: particleFloat 15s linear infinite;
+        }
+
+        .particle:nth-child(2n) {
+            background: rgba(33, 150, 243, 0.6);
+            animation-duration: 12s;
+        }
+
+        .particle:nth-child(3n) {
+            background: rgba(255, 152, 0, 0.6);
+            animation-duration: 18s;
+        }
+
+        .particle:nth-child(4n) {
+            background: rgba(233, 30, 99, 0.6);
+            animation-duration: 20s;
+        }
+
+        @keyframes particleFloat {
+            0% {
+                transform: translateY(100vh) translateX(0px) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) translateX(100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Enhanced mobile responsiveness */
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px;
+                margin: 10px;
+            }
+            
+            h1 {
+                font-size: 2.5em;
+            }
+            
+            .subtitle {
+                font-size: 1.1em;
+            }
+            
+            .voice-button {
+                width: 120px;
+                height: 120px;
+                font-size: 2.2em;
+            }
+            
+            .text-input {
+                font-size: 16px;
+                padding: 18px 20px;
+            }
+            
+            .send-button {
+                font-size: 16px;
+                padding: 15px 30px;
+            }
+            
+            .features {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .feature {
+                padding: 25px 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            .logo {
+                font-size: 3em;
+            }
+            
+            .voice-button {
+                width: 100px;
+                height: 100px;
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo"></div>
+            <div class="weather-widget" id="weatherWidget">
+                <div class="weather-loading">
+                    <i class="fas fa-cloud-sun"></i>
+                    <span>Checking weather...</span>
+                </div>
+                <div class="weather-content" style="display: none;">
+                    <div class="weather-main">
+                        <i class="weather-icon"></i>
+                        <div class="weather-temp">--°C</div>
+                    </div>
+                    <div class="weather-details">
+                        <div class="weather-location">--</div>
+                        <div class="weather-desc">--</div>
+                        <div class="weather-recommendation">Getting farming recommendations...</div>
+                    </div>
+                </div>
+            </div>
+            <h1>KrishiAI</h1>
+            <p class="subtitle">Voice Assistant for Farmers - Ask Anything in Your Language</p>
+            
+            <!-- User Info and Logout -->
+            {% if user %}
+                <div style="margin: 20px 0; padding: 15px; background: rgba(76, 175, 80, 0.1); border-radius: 15px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <div style="width: 40px; height: 40px; background: linear-gradient(45deg, #4CAF50, #2196F3); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
+                            {{ user[4][0].upper() if user[4] else user[1][0].upper() }}
+                        </div>
+                        <div>
+                            <p style="color: #4CAF50; font-weight: 600; margin: 0;">Welcome, {{ user[4] or user[1] }}! 🌾</p>
+                            <p style="color: #666; font-size: 14px; margin: 0;">@{{ user[1] }}</p>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <a href="{{ url_for('profile') }}" style="padding: 8px 16px; background: #4CAF50; color: white; text-decoration: none; border-radius: 20px; font-size: 14px; font-weight: 500; transition: all 0.3s ease; display: flex; align-items: center; gap: 5px;">
+                            <i class="fas fa-user"></i> Profile
+                        </a>
+                        <a href="{{ url_for('logout') }}" style="padding: 8px 16px; background: #f44336; color: white; text-decoration: none; border-radius: 20px; font-size: 14px; font-weight: 500; transition: all 0.3s ease; display: flex; align-items: center; gap: 5px;" onclick="return confirm('Are you sure you want to logout?');">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="language-selector">
+            <select id="languageSelect">
+                <option value="english">English</option>
+                <option value="hindi">हिंदी (Hindi)</option>
+                <option value="kannada">ಕನ್ನಡ (Kannada)</option>
+                <option value="tamil">தமிழ் (Tamil)</option>
+                <option value="telugu">తెలుగు (Telugu)</option>
+                <option value="marathi">मराठी (Marathi)</option>
+            </select>
+        </div>
+
+        <div class="voice-interface">
+            <button id="voiceButton" class="voice-button" title="Click to speak">
+                <i class="fas fa-microphone"></i>
+            </button>
+            <p>Click the microphone to ask your farming question</p>
+        </div>
+
+        <div class="text-input-section">
+            <input type="text" id="textInput" class="text-input" placeholder="Or type your farming question here...">
+            <button id="sendButton" class="send-button">
+                <i class="fas fa-paper-plane"></i> Ask Question
+            </button>
+        </div>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Getting your answer...</p>
+        </div>
+
+        <div class="status" id="status"></div>
+
+        <div class="response-section" id="responseSection">
+            <div class="response-text" id="responseText"></div>
+            <div class="audio-player" id="audioPlayer"></div>
+        </div>
+
+        <div class="features">
+            <div class="feature">
+                <i class="fas fa-seedling"></i>
+                <h3>Crop Guidance</h3>
+                <p>Get advice on what crops to grow based on season and location</p>
+            </div>
+            <div class="feature">
+                <i class="fas fa-bug"></i>
+                <h3>Pest Control</h3>
+                <p>Identify pests and get treatment recommendations</p>
+            </div>
+            <div class="feature">
+                <i class="fas fa-cloud-rain"></i>
+                <h3>Weather Tips</h3>
+                <p>Weather-based farming advice and precautions</p>
+            </div>
+            <div class="feature">
+                <i class="fas fa-phone"></i>
+                <h3>SMS Support</h3>
+                <p>Get answers via SMS when internet is not available</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Weather data and functions
+        let currentLocation = null;
+        let currentWeather = null;
+        
+        // Get user's location
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    position => {
+                        currentLocation = {
+                            lat: position.coords.latitude,
+                            lon: position.coords.longitude
+                        };
+                        updateWeather();
+                        // Update weather every 30 minutes
+                        setInterval(updateWeather, 30 * 60 * 1000);
+                    },
+                    error => {
+                        console.error("Error getting location:", error);
+                        const weatherLoading = document.querySelector('.weather-loading');
+                        if (weatherLoading) {
+                            weatherLoading.innerHTML = '<i class="fas fa-map-marker-alt"></i> <span>Enable location for weather</span>';
+                        }
+                    },
+                    { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
+                );
+            } else {
+                console.log("Geolocation is not supported by this browser.");
+                const weatherLoading = document.querySelector('.weather-loading');
+                if (weatherLoading) {
+                    weatherLoading.innerHTML = '<i class="fas fa-map-marker-alt-slash"></i> <span>Location not supported</span>';
+                }
+            }
+        }
+        
+        // Update weather information
+        async function updateWeather() {
+            if (!currentLocation) return;
+            
+            const weatherLoading = document.querySelector('.weather-loading');
+            const weatherContent = document.querySelector('.weather-content');
+            
+            try {
+                const response = await fetch(`/api/weather/current?lat=${currentLocation.lat}&lon=${currentLocation.lon}`);
+                if (!response.ok) throw new Error('Weather data not available');
+                
+                const data = await response.json();
+                currentWeather = data;
+                
+                // Update weather icon based on condition
+                const weatherIcon = weatherContent.querySelector('.weather-icon');
+                const condition = data.condition ? data.condition.toLowerCase() : '';
+                
+                if (condition.includes('rain')) {
+                    weatherIcon.className = 'weather-icon fas fa-cloud-rain';
+                } else if (condition.includes('cloud')) {
+                    weatherIcon.className = 'weather-icon fas fa-cloud';
+                } else if (condition.includes('clear')) {
+                    weatherIcon.className = 'weather-icon fas fa-sun';
+                } else if (condition.includes('snow')) {
+                    weatherIcon.className = 'weather-icon fas fa-snowflake';
+                } else {
+                    weatherIcon.className = 'weather-icon fas fa-cloud-sun';
+                }
+                
+                // Update other weather info
+                weatherContent.querySelector('.weather-temp').textContent = `${Math.round(data.temperature)}°C`;
+                weatherContent.querySelector('.weather-location').textContent = 'Your Location';
+                weatherContent.querySelector('.weather-desc').textContent = data.description || 'Weather data available';
+                weatherContent.querySelector('.weather-recommendation').textContent = 
+                    data.recommendations || 'Weather conditions normal for farming';
+                
+                // Show content, hide loading
+                if (weatherLoading) weatherLoading.style.display = 'none';
+                if (weatherContent) weatherContent.style.display = 'flex';
+                
+            } catch (error) {
+                console.error('Error fetching weather:', error);
+                if (weatherLoading) {
+                    weatherLoading.innerHTML = '<i class="fas fa-cloud-slash"></i> <span>Weather data unavailable</span>';
+                }
+            }
+        }
+        
+        // Get weather forecast
+        async function getWeatherForecast() {
+            if (!currentLocation) return null;
+            
+            try {
+                const response = await fetch(`/api/weather/forecast?lat=${currentLocation.lat}&lon=${currentLocation.lon}`);
+                if (!response.ok) throw new Error('Forecast not available');
+                return await response.json();
+            } catch (error) {
+                console.error('Error fetching forecast:', error);
+                return null;
+            }
+        }
+        
+        // Add weather context to AI questions
+        async function getWeatherContext() {
+            if (!currentLocation) return null;
+            return {
+                lat: currentLocation.lat,
+                lon: currentLocation.lon
+            };
+        }
+        
+        // Initialize weather when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            getLocation();
+            
+            // Add weather context to chat messages
+            const originalSendMessage = window.sendMessage;
+            window.sendMessage = async function() {
+                const input = document.getElementById('textInput');
+                const message = input.value.trim();
+                if (!message) return;
+                
+                // Add weather context to the message if available
+                const weatherContext = await getWeatherContext();
+                const messageData = { 
+                    question: message,
+                    language: document.getElementById('languageSelect').value || 'english',
+                    use_voice: false,
+                    location: weatherContext
+                };
+                
+                // Call original sendMessage with context
+                originalSendMessage.call(this, messageData);
+            };
+            
+            // Update weather widget on click
+            const weatherWidget = document.getElementById('weatherWidget');
+            if (weatherWidget) {
+                weatherWidget.addEventListener('click', updateWeather);
+                weatherWidget.style.cursor = 'pointer';
+                weatherWidget.title = 'Click to refresh weather';
+            }
+        });
+        
+        // Show status message
+        function showStatus(message, type = 'info') {
+            const status = document.createElement('div');
+            status.className = `status ${type}`;
+            status.textContent = message;
+            document.body.appendChild(status);
+            
+            // Auto-remove after 5 seconds
+            setTimeout(() => {
+                status.style.animation = 'fadeOut 0.5s forwards';
+                setTimeout(() => status.remove(), 500);
+            }, 5000);
+        }
+    </script>
+    
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
