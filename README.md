@@ -287,4 +287,4 @@ For support and queries:
 
 **Made with ❤️ for Indian Farmers**
 
-*Empowering rural communities through AI and voice technology*
+
